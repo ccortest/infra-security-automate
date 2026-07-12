@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 40px; background-color: #f4f7f6; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .header { border-left: 5px solid #27ae60; padding-left: 15px; }
+        .success { color: #27ae60; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>Certificado de Hardening Aplicado</h1>
+            <p>Fecha de ejecución: {{ fecha }}</p>
+        </div>
+        <table>
+            <tr><th>Sistema</th><th>Acción Realizada</th><th>Estado</th></tr>
+            {% for accion in acciones %}
+            <tr><td>{{ accion.sistema }}</td><td>{{ accion.detalle }}</td><td class="success">Aplicado</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

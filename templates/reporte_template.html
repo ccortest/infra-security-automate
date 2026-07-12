@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Auditoría de Infraestructura</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 40px; 
+            background-color: #f5f6fa; 
+            color: #2f3640; 
+        }
+        .container { 
+            max-width: 850px; 
+            margin: auto; 
+            background: #ffffff; 
+            padding: 35px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+        }
+        h1 { 
+            text-align: center; 
+            color: #2c3e50; 
+            border-bottom: 3px solid #3498db; 
+            padding-bottom: 18px; 
+            margin-top: 0;
+        }
+        .meta-box { 
+            background: #f1f2f6; 
+            padding: 15px; 
+            border-radius: 6px; 
+            margin-bottom: 30px; 
+            font-size: 0.95em; 
+            border-left: 4px solid #718093;
+        }
+        .server-card { 
+            background: #ffffff; 
+            border: 1px solid #dcdde1; 
+            border-radius: 8px; 
+            padding: 22px; 
+            margin-bottom: 25px; 
+        }
+        .server-card h2 { 
+            margin-top: 0; 
+            color: #2c3e50; 
+            border-bottom: 2px solid #f1f2f6; 
+            padding-bottom: 12px; 
+            font-size: 1.3em;
+        }
+        .status-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+        }
+        .status-table td { 
+            padding: 12px; 
+            border-bottom: 1px solid #f1f2f6; 
+        }
+        .status-table td:first-child { 
+            font-weight: 600; 
+            width: 40%; 
+            color: #718093;
+        }
+        .badge { 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            color: white; 
+            font-size: 0.85em; 
+            font-weight: bold; 
+            display: inline-block;
+        }
+        .badge-success { background-color: #2ecc71; }
+        .badge-danger { background-color: #e74c3c; }
+        .highlight { 
+            font-weight: bold; 
+            color: #2980b9; 
+        }
+        .footer { 
+            text-align: center; 
+            margin-top: 35px; 
+            font-size: 0.85em; 
+            color: #a4b0be; 
+            border-top: 1px solid #f1f2f6;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>REPORTE CONSOLIDADO DE AUDITORÍA</h1>
+        
+        <div class="meta-box">
+            <strong>Fecha de Ejecución:</strong> {{ fecha }}<br>
+            <strong>Origen de Inspección:</strong> Estación Central (Kali Linux)<br>
+            <strong>Aislamiento de Credenciales:</strong> Seguro (Variables de entorno en RAM)
+        </div>
+
+        <div class="server-card">
+            <h2>[+] Vector Endpoint: Linux (Ubuntu MATE) ({{ linux_ip }})</h2>
+            <table class="status-table">
+                <tr>
+                    <td>Estado de Conexión:</td>
+                    <td>
+                        {% if linux.status_conexion == 'Exitoso' %}
+                        <span class="badge badge-success">Exitoso</span>
+                        {% else %}
+                        <span class="badge badge-danger">Fallido</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if linux.status_conexion == 'Exitoso' %}
+                <tr><td>Kernel del Sistema:</td><td>{{ linux.os_version }}</td></tr>
+                <tr><td>Configuración UFW (Firewall):</td><td>{{ linux.firewall_status }}</td></tr>
+                <tr><td>Parches Pendientes (APT):</td><td><span class="highlight">{{ linux.updates_pending }}</span></td></tr>
+                {% else %}
+                <tr><td>Detalle del Error:</td><td style="color: #e74c3c; font-weight: bold;">{{ linux.error_msg }}</td></tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <div class="server-card">
+            <h2>[+] Vector Endpoint: Windows (Windows 10 Pro) ({{ windows_ip }})</h2>
+            <table class="status-table">
+                <tr>
+                    <td>Estado de Conexión:</td>
+                    <td>
+                        {% if windows.status_conexion == 'Exitoso' %}
+                        <span class="badge badge-success">Exitoso</span>
+                        {% else %}
+                        <span class="badge badge-danger">Fallido</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if windows.status_conexion == 'Exitoso' %}
+                <tr><td>Perfiles Firewall (WinRM):</td><td>{{ windows.firewall_status }}</td></tr>
+                <tr><td>Actualizaciones Base (WUA):</td><td><span class="highlight">{{ windows.updates_pending }}</span></td></tr>
+                {% else %}
+                <tr><td>Detalle del Error:</td><td style="color: #e74c3c; font-weight: bold;">{{ windows.error_msg }}</td></tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Generado automáticamente mediante motor de plantillas Jinja2 - Proyecto de Automatización de Seguridad</p>
+        </div>
+    </div>
+</body>
+</html>
